@@ -49,7 +49,7 @@ namespace UniVRM10
             }
         }
 
-        public Vrm10Runtime(Vrm10Instance target, ControlRigGenerationOption controlRigGenerationOption)
+        public Vrm10Runtime(Vrm10Instance target, bool useControlRig)
         {
             m_target = target;
 
@@ -58,12 +58,12 @@ namespace UniVRM10
                 throw new Exception();
             }
 
-            if (controlRigGenerationOption != ControlRigGenerationOption.None)
+            if (useControlRig)
             {
-                ControlRig = new Vrm10RuntimeControlRig(target.Humanoid, m_target.transform, controlRigGenerationOption);
+                ControlRig = new Vrm10RuntimeControlRig(target.Humanoid, m_target.transform);
             }
             Constraints = target.GetComponentsInChildren<IVrm10Constraint>();
-            LookAt = new Vrm10RuntimeLookAt(target.Vrm.LookAt, target.Humanoid, m_head, target.LookAtTargetType, target.Gaze);
+            LookAt = new Vrm10RuntimeLookAt(target.Vrm.LookAt, target.Humanoid, ControlRig);
             Expression = new Vrm10RuntimeExpression(target, LookAt, LookAt.EyeDirectionApplicable);
 
             var instance = target.GetComponent<RuntimeGltfInstance>();
@@ -191,7 +191,7 @@ namespace UniVRM10
             }
 
             // 3. Gaze control
-            LookAt.Process(m_target.LookAtTargetType, m_target.Gaze);
+            LookAt.Process(m_target.LookAtTargetType, m_target.LookAtTarget);
 
             // 4. Expression
             Expression.Process();

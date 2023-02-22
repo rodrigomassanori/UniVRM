@@ -31,19 +31,10 @@ namespace UniVRM10
         /// </summary>
         public Transform ControlBone { get; }
 
-        /// <summary>
-        /// コントロールボーンの初期ローカル位置。
-        /// </summary>
-        public Vector3 InitialControlBoneLocalPosition { get; }
-
-        /// <summary>
-        /// コントロールボーンの初期ローカル回転。
-        /// </summary>
-        public Quaternion InitialControlBoneLocalRotation { get; }
-
         private readonly Quaternion _initialTargetLocalRotation;
         private readonly Quaternion _initialTargetGlobalRotation;
         private readonly List<Vrm10ControlBone> _children = new List<Vrm10ControlBone>();
+        public IReadOnlyList<Vrm10ControlBone> Children => _children;
 
         private Vrm10ControlBone(Transform controlTarget, HumanBodyBones boneType, Vrm10ControlBone parent)
         {
@@ -58,18 +49,17 @@ namespace UniVRM10
 
             BoneType = boneType;
             ControlTarget = controlTarget;
+
+            // 回転とスケールが除去されたTPoseを構築
             // NOTE: bone name must be unique in the vrm instance.
             ControlBone = new GameObject($"{nameof(Vrm10ControlBone)}:{boneType.ToString()}").transform;
             ControlBone.position = controlTarget.position;
-
             if (parent != null)
             {
                 ControlBone.SetParent(parent.ControlBone, true);
                 parent._children.Add(this);
             }
 
-            InitialControlBoneLocalPosition = ControlBone.localPosition;
-            InitialControlBoneLocalRotation = ControlBone.localRotation;
             _initialTargetLocalRotation = controlTarget.localRotation;
             _initialTargetGlobalRotation = controlTarget.rotation;
         }
@@ -79,7 +69,7 @@ namespace UniVRM10
         /// </summary>
         internal void ProcessRecursively()
         {
-            ControlTarget.localRotation = _initialTargetLocalRotation * Quaternion.Inverse(_initialTargetGlobalRotation) * ControlBone.localRotation * _initialTargetGlobalRotation;
+            ControlTarget.localRotation = _initialTargetLocalRotation * (Quaternion.Inverse(_initialTargetGlobalRotation) * ControlBone.localRotation * _initialTargetGlobalRotation);
             foreach (var child in _children)
             {
                 child.ProcessRecursively();

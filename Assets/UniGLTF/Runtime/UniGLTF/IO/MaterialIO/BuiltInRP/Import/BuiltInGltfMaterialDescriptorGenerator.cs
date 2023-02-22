@@ -23,13 +23,18 @@ namespace UniGLTF
 
             return new MaterialDescriptor(
                 GltfMaterialImportUtils.ImportMaterialName(i, null),
-                BuiltInGltfPbrMaterialImporter.ShaderName,
+                BuiltInGltfPbrMaterialImporter.Shader,
                 null,
                 new Dictionary<string, TextureDescriptor>(),
                 new Dictionary<string, float>(),
                 new Dictionary<string, Color>(),
                 new Dictionary<string, Vector4>(),
                 new Action<Material>[]{});
+        }
+
+        public MaterialDescriptor GetGltfDefault()
+        {
+            return BuiltInGltfDefaultMaterialImporter.CreateParam();
         }
     }
 }
