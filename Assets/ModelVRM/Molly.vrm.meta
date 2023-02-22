@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: cf2306615f5845742ac3bc57e8909cbf
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects:
+  - first:
+      type: UnityEngine:Texture
+      assembly: UnityEngine.CoreModule
+      name: yagi 1
+    second: {fileID: 2800000, guid: 84bf2a78a3800924fbdb34649a44790b, type: 3}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: f66ead3390398f443aa127b741826ad9, type: 3}
+  MigrateToVrm1: 0
+  RenderPipeline: 0
